@@ -7,6 +7,13 @@ export class CdkStack extends cdk.Stack {
     super(scope, id, props);
     console.log('✅ CDK Stack constructor running...');
 
+    
+    const provider = new iam.OpenIdConnectProvider(this, 'GitHubOIDCProvider', {
+      url: 'https://token.actions.githubusercontent.com',
+      clientIds: ['sts.amazonaws.com'],
+    });    
+
+
     // ✅ Create the IAM Role for GitHub Actions OIDC
     new iam.Role(this, 'GitHubActionsOIDCRole', {
       roleName: 'GitHubActionsOIDCRole',
@@ -24,7 +31,7 @@ export class CdkStack extends cdk.Stack {
 
     // Test output
     new cdk.CfnOutput(this, 'TestOutput', {
-      value: 'CDK Synth Worked!',
+      value: '✅ GitHub OIDC Deploy Success!',
     });
   }
 }
