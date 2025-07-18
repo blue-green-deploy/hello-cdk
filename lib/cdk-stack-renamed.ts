@@ -8,7 +8,7 @@ export class CdkStack extends cdk.Stack {
     console.log('✅ CDK Stack constructor running...');
 
     
-    const provider = new iam.OpenIdConnectProvider(this, 'GitHubOIDCProvider', {
+    const githubProvider = new iam.OpenIdConnectProvider(this, 'GitHubOIDCProvider', {
       url: 'https://token.actions.githubusercontent.com',
       clientIds: ['sts.amazonaws.com'],
     });    
@@ -17,7 +17,7 @@ export class CdkStack extends cdk.Stack {
     // ✅ Create the IAM Role for GitHub Actions OIDC
     new iam.Role(this, 'GitHubActionsOIDCRole', {
       roleName: 'GitHubActionsOIDCRole',
-      assumedBy: new iam.WebIdentityPrincipal('token.actions.githubusercontent.com', {
+      assumedBy: new iam.WebIdentityPrincipal(githubProvider.openIdConnectProviderArn, {
         StringLike: {
           'token.actions.githubusercontent.com:sub': 'repo:blue-green-deploy/hello-cdk:*',
         },
